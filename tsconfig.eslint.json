@@ -7,9 +7,5 @@
     "./prettier.config.js",
     "./node_modules",
     "./build"
-  ],
-  "compilerOptions": {
-    "allowJs": false,
-    "checkJs": false
-  }
+  ]
 }
