@@ -1,3 +1,4 @@
+/* eslint-env node, commonjs */
 module.exports = {
   semi: true,
   tabWidth: 2,

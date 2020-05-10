@@ -1,3 +1,4 @@
+/* eslint-env node, commonjs */
 module.exports = {
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
@@ -9,9 +10,5 @@ module.exports = {
   parserOptions: {
     project: './tsconfig.eslint.json',
     ecmaVersion: 2018,
-    sourceType: 'module',
-  },
-  rules: {
-    // Special ESLint rules or overrides go here.
   },
 };
