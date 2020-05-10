@@ -7,8 +7,8 @@ export const hash = (value: string): string => {
   let index = value.length;
 
   while (index--) {
-    hash = 33 * hash + value.charCodeAt(index);
+    hash = (hash << 5) + hash + value.charCodeAt(index);
   }
 
-  return hash.toString(16);
+  return hash.toString(32);
 };
