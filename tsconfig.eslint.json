@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["src/**/*.ts"],
+  "exclude": [
+    "./.eslintrc.js",
+    "./jest.config.js",
+    "./prettier.config.js",
+    "./node_modules",
+    "./build"
+  ],
+  "compilerOptions": {
+    "allowJs": false,
+    "checkJs": false
+  }
+}

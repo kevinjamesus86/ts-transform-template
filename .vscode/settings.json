@@ -1,0 +1,12 @@
+{
+  "prettier.configPath": "prettier.config.js",
+  "eslint.validate": ["javascript", "typescript"],
+  "eslint.alwaysShowStatus": true,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "[typescript], [javascript]": {
+    "editor.formatOnSave": false
+  }
+}

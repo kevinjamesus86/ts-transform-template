@@ -1,0 +1,15 @@
+{
+  "files": ["src/index.ts"],
+  "exclude": ["src/test"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "rootDir": "src",
+    "outDir": "build",
+    "target": "ES2015",
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "strictNullChecks": true,
+    "importsNotUsedAsValues": "remove",
+    "strict": true
+  }
+}
