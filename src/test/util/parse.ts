@@ -6,8 +6,8 @@ export interface SourceProducer {
 }
 
 export interface TestNode<T> {
-  node: T;
   program: ts.Program;
+  node: T;
 }
 
 export const parse = <T = ts.Node>(
@@ -36,7 +36,7 @@ export const parse = <T = ts.Node>(
   })(sourceFile!);
 
   return {
-    node,
     program,
+    node,
   };
 };

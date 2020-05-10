@@ -2,32 +2,7 @@ import * as ts from 'typescript';
 import { parse } from './util/parse';
 import { traverse, TraversableNode } from '../template';
 
-describe('Template.traverse', () => {
-  /**
-   * Test setup sanity check
-   */
-
-  it(`Doesn't flip out on "empty" files`, () => {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    const { node } = parse(() => {});
-    expect(node).toBeNull();
-  });
-
-  it(`Doesn't flip out on files without templates`, () => {
-    const { node } = parse(() => {
-      return {
-        not: 'a template',
-      };
-    });
-
-    expect(node).toBeDefined();
-    expect(ts.isObjectLiteralExpression(node)).toBe(true);
-  });
-
-  /**
-   * Actual tests
-   */
-
+describe('traverse', () => {
   it('NoSubStitutionTemplateLiteral', () => {
     const { node, program } = parse<TraversableNode>(() => {
       return `<no-sub-template />`;
