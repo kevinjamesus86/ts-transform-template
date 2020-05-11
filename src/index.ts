@@ -75,7 +75,7 @@ export function transform(
   templateTransformFn: TemplateTransformFn
 ): TransformerFactory<SourceFile> {
   return function transformerFactory(context: TransformationContext) {
-    return function transformer(sourceFile: SourceFile) {
+    return function transformer(sourceFile: SourceFile): SourceFile {
       return visitNode(
         sourceFile,
         visit(context, templateTransformFn, program)

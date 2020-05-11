@@ -1,15 +1,16 @@
 {
-  "files": ["src/index.ts"],
-  "exclude": ["src/test"],
+  "files": ["index.ts"],
+  "exclude": ["**/node_modules"],
   "compilerOptions": {
     "baseUrl": ".",
-    "rootDir": "src",
-    "outDir": "build",
+    "rootDir": ".",
+    "outDir": "../build",
     "target": "ES2015",
     "module": "CommonJS",
     "esModuleInterop": true,
-    "strictNullChecks": true,
+    "allowSyntheticDefaultImports": true,
     "importsNotUsedAsValues": "remove",
+    "strictNullChecks": true,
     "strict": true
   }
 }

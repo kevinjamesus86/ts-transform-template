@@ -1,6 +1,8 @@
 import {
   SyntaxKind,
+  createStringLiteral,
   isBinaryExpression,
+  isEnumMember,
   isIdentifier,
   isNumericLiteral,
   isParenthesizedExpression,
@@ -9,12 +11,13 @@ import {
   isStringLiteralLike,
   isTemplateExpression,
   isTemplateLiteralToken,
-  createStringLiteral,
+  isVariableDeclaration,
 } from 'typescript';
 
 import type {
   BinaryExpression,
   Expression,
+  EnumMember,
   Identifier,
   LiteralLikeNode,
   Node,
@@ -26,13 +29,15 @@ import type {
   StringLiteralLike,
   TemplateExpression,
   TemplateLiteralToken,
-  TypeChecker,
+  VariableDeclaration,
 } from 'typescript';
 
 import { isArray, isString, invariant } from './util';
 import type { TemplateTransformFn } from './types';
 
 export type YieldedTypes = string;
+
+export type AcceptableDeclaration = EnumMember | VariableDeclaration;
 
 /**
  * Node types that are an acceptable entry point for the template hunt
@@ -116,63 +121,63 @@ export function* traverse(
   node: TraversableNode,
   program: Program
 ): Generator<YieldedTypes> {
-  let typeChecker: TypeChecker | null = null;
+  /**
+   * Fast path! LiteralLike nodes are by far the most common
+   * when traversing templates
+   */
+  if (isLiteralLikeNode(node)) {
+    yield getNodeText(node);
+  } else if (isBinaryExpression(node)) {
+    invariant(
+      node.operatorToken.kind === SyntaxKind.PlusToken,
+      `Can only join template parts from BinaryExpressions ` +
+        `using the "+" operator, saw: ${node.operatorToken.getText()}`
+    );
 
-  yield* (function* walk(node: TraversableNode): Generator<YieldedTypes> {
-    /**
-     * Fast path! LiteralLike nodes are by far the most common
-     * when traversing templates
-     */
-    if (isLiteralLikeNode(node)) {
-      yield getNodeText(node);
-    } else if (isBinaryExpression(node)) {
-      invariant(
-        node.operatorToken.kind === SyntaxKind.PlusToken,
-        `Can only join template parts from BinaryExpressions ` +
-          `using the "+" operator, saw: ${node.operatorToken.getText()}`
-      );
+    yield* traverse(node.left, program);
+    yield* traverse(node.right, program);
+  } else if (isTemplateExpression(node)) {
+    yield* traverse(node.head, program);
+    for (const span of node.templateSpans) {
+      yield* traverse(span.expression, program);
+      yield* traverse(span.literal, program);
+    }
+  } else if (isIdentifier(node) || isPropertyAccessExpression(node)) {
+    const typeChecker = program.getTypeChecker();
 
-      yield* walk(node.left);
-      yield* walk(node.right);
-    } else if (isTemplateExpression(node)) {
-      yield* walk(node.head);
-      for (const span of node.templateSpans) {
-        yield* walk(span.expression);
-        yield* walk(span.literal);
-      }
-    } else if (isIdentifier(node) || isPropertyAccessExpression(node)) {
-      typeChecker = typeChecker ?? program.getTypeChecker();
+    let identifier: Identifier;
+    if (isIdentifier(node)) {
+      identifier = node as Identifier;
+    } else {
+      identifier = node.name as Identifier;
+    }
 
-      let identifier: Identifier;
-      if (isIdentifier(node)) {
-        identifier = <Identifier>node;
-      } else {
-        identifier = <Identifier>node.name;
-      }
-
-      const symbol = typeChecker.getSymbolAtLocation(identifier);
-      if (symbol) {
-        const initializer = (<any>symbol.valueDeclaration)?.initializer;
-        if (isLiteralLikeNode(initializer)) {
+    const symbol = typeChecker.getSymbolAtLocation(identifier);
+    if (symbol) {
+      const declaration = symbol.valueDeclaration;
+      if (isEnumMember(declaration) || isVariableDeclaration(declaration)) {
+        const initializer = (symbol.valueDeclaration as AcceptableDeclaration)
+          .initializer;
+        if (initializer && isLiteralLikeNode(initializer)) {
           return yield getNodeText(initializer);
         }
       }
-
-      invariant(
-        false,
-        `Could not get literal value of Identifier ` +
-          `from Identifier or PropertyAccessExpression: ${node.getText()}`
-      );
-    } else if (isParenthesizedExpression(node)) {
-      yield* walk(node.expression);
-    } else {
-      invariant(false, `Non-traversable node found: ${node.getText()}`);
     }
-  })(node);
+
+    invariant(
+      false,
+      `Could not get literal value of Identifier ` +
+        `from Identifier or PropertyAccessExpression: ${node.getText()}`
+    );
+  } else if (isParenthesizedExpression(node)) {
+    yield* traverse(node.expression, program);
+  } else {
+    invariant(false, `Non-traversable node found: ${node.getText()}`);
+  }
 }
 
 export class Template {
-  static willEnterAtNode(node: Node) {
+  static willEnterAtNode(node: Node): node is TraversableEntryNode {
     return isTraversableEntryNode(node);
   }
 

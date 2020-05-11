@@ -1,0 +1,15 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier/@typescript-eslint"
+  ],
+  "parserOptions": {
+    "extraFileExtensions": [".json"],
+    "project": "src/tsconfig.eslint.json",
+    "sourceType": "module",
+    "ecmaVersion": 2015
+  }
+}

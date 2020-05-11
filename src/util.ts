@@ -1,15 +1,15 @@
 export const { isArray } = Array;
 
-export const isObject = (value: any): value is object => {
+export const isObject = (value: unknown): value is object => {
   return value != null && typeof value === 'object';
 };
 
-export const isString = (value: any): value is string => {
+export const isString = (value: unknown): value is string => {
   return value != null && typeof value === 'string';
 };
 
-export const invariant = (condition: any, message: string) => {
+export const invariant = (condition: unknown, message: string): void => {
   if (!condition) {
     throw new Error(message);
   }
-}
+};
