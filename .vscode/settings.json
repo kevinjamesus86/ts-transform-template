@@ -1,12 +1,39 @@
 {
+  // Provide prettier config path and require that
+  // it exists. Provides a nice warning when organizing
+  // and the file can't be found ;)
   "prettier.configPath": "prettier.config.js",
-  "eslint.validate": ["javascript", "typescript"],
+  "prettier.requireConfig": true,
+  // Enable eslint for the project
+  "eslint.enable": true,
+  // Enable eslint as a formatter
+  "eslint.format.enable": true,
+  "eslint.codeActionsOnSave.mode": "all",
+  // So we know what's going on
+  "eslint.debug": true,
   "eslint.alwaysShowStatus": true,
-  "editor.formatOnSave": true,
+  // We're using yarn
+  "eslint.packageManager": "yarn",
+  // Selectively vaildate languages now that
+  // it is enabed at the editor level
+  "eslint.probe": ["javascript", "typescript"],
+  // Run eslint on save
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "[typescript], [javascript]": {
-    "editor.formatOnSave": false
+  // Disable language service validation as it conflicts with
+  // eslint's validation as a service
+  "typescript.validate.enable": false,
+  "javascript.validate.enable": false,
+  // Enable formatting for json files
+  "[json]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript], [typescript]": {
+    // Disable editor save actions
+    "editor.formatOnSave": false,
+    // Set the default formatter as eslint
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   }
 }

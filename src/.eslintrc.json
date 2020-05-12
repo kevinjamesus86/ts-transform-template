@@ -8,8 +8,11 @@
   ],
   "parserOptions": {
     "extraFileExtensions": [".json"],
-    "project": "src/tsconfig.eslint.json",
+    "project": "tsconfig.eslint.json",
     "sourceType": "module",
-    "ecmaVersion": 2015
+    "ecmaVersion": 2015,
+    "ecmaFeatures": {
+      "modules": true
+    }
   }
 }

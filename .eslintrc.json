@@ -5,10 +5,19 @@
   "reportUnusedDisableDirectives": true,
   "parserOptions": {
     "ecmaVersion": 2015,
-    "sourceType": "script"
+    "sourceType": "script",
+    "ecmaFeatures": {
+      "modules": false,
+      "impliedStrict": true
+    }
+  },
+  "rules": {
+    "prettier/prettier": 2,
+    "semi": [2, "always"],
+    "new-parens": 2,
+    "complexity": 1
   },
   "env": {
-    "browser": false,
     "node": true
   }
 }

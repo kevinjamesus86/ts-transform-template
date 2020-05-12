@@ -1,6 +1,6 @@
 import * as ts from 'typescript';
+import { TraversableNode, traverse } from '../template';
 import { parse } from './util/parse';
-import { traverse, TraversableNode } from '../template';
 
 describe('traverse', () => {
   it('NoSubStitutionTemplateLiteral', () => {

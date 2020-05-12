@@ -1,5 +1,22 @@
+import type {
+  BinaryExpression,
+  EnumMember,
+  Expression,
+  Identifier,
+  LiteralLikeNode,
+  Node,
+  NumericLiteral,
+  ParenthesizedExpression,
+  Program,
+  PropertyAccessExpression,
+  StringLiteral,
+  StringLiteralLike,
+  TemplateExpression,
+  TemplateLiteralToken,
+  VariableDeclaration,
+} from 'typescript';
+
 import {
-  SyntaxKind,
   createStringLiteral,
   isBinaryExpression,
   isEnumMember,
@@ -12,28 +29,11 @@ import {
   isTemplateExpression,
   isTemplateLiteralToken,
   isVariableDeclaration,
+  SyntaxKind,
 } from 'typescript';
 
-import type {
-  BinaryExpression,
-  Expression,
-  EnumMember,
-  Identifier,
-  LiteralLikeNode,
-  Node,
-  NumericLiteral,
-  ParenthesizedExpression,
-  PropertyAccessExpression,
-  Program,
-  StringLiteral,
-  StringLiteralLike,
-  TemplateExpression,
-  TemplateLiteralToken,
-  VariableDeclaration,
-} from 'typescript';
-
-import { isArray, isString, invariant } from './util';
 import type { TemplateTransformFn } from './types';
+import { invariant, isArray, isString } from './util';
 
 export type YieldedTypes = string;
 
