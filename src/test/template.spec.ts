@@ -157,4 +157,108 @@ describe('traverse', () => {
     expect(gen.next().value).toBe('</div>');
     expect(gen.next().done).toBe(true);
   });
+
+  describe('Identifiers', () => {
+    it('Throws on type: function', () => {
+      const { node, program } = parse<ts.TemplateExpression>(() => {
+        const Fn = (): string => 'nope';
+        return `<div class=${Fn} />`;
+      });
+
+      const gen = traverse(node, program);
+      expect(gen.next().value).toBe(`<div class=`);
+
+      expect(gen.next.bind(gen)).toThrow(
+        `Could not get literal value of Identifier ` +
+          `from Identifier or PropertyAccessExpression: Fn`
+      );
+    });
+
+    it('Throws on type: null', () => {
+      const { node, program } = parse<ts.TemplateExpression>(() => {
+        const Null = null;
+        return `<div class=${Null} />`;
+      });
+
+      const gen = traverse(node, program);
+      expect(gen.next().value).toBe(`<div class=`);
+
+      expect(gen.next.bind(gen)).toThrow(
+        `Could not get literal value of Identifier ` +
+          `from Identifier or PropertyAccessExpression: Null`
+      );
+    });
+
+    it('Throws on type: identifier', () => {
+      const { node, program } = parse<ts.TemplateExpression>(() => {
+        const Valid = 'valid';
+        const Str = Valid;
+        return `<div class=${Str} />`;
+      });
+
+      const gen = traverse(node, program);
+      expect(gen.next().value).toBe(`<div class=`);
+
+      expect(gen.next.bind(gen)).toThrow(
+        `Could not get literal value of Identifier ` +
+          `from Identifier or PropertyAccessExpression: Str`
+      );
+    });
+  });
+
+  describe('PropertyAccessExpression', () => {
+    it('Throws on type: function', () => {
+      const { node, program } = parse<ts.TemplateExpression>(() => {
+        const NS = {
+          Fn(): string {
+            return 'nodpe';
+          },
+        };
+        return `<div class=${NS.Fn} />`;
+      });
+
+      const gen = traverse(node, program);
+      expect(gen.next().value).toBe(`<div class=`);
+
+      expect(gen.next.bind(gen)).toThrow(
+        `Could not get literal value of Identifier ` +
+          `from Identifier or PropertyAccessExpression: NS.Fn`
+      );
+    });
+
+    it('Throws on type: null', () => {
+      const { node, program } = parse<ts.TemplateExpression>(() => {
+        const NS = {
+          Null: null,
+        };
+        return `<div class=${NS.Null} />`;
+      });
+
+      const gen = traverse(node, program);
+      expect(gen.next().value).toBe(`<div class=`);
+
+      expect(gen.next.bind(gen)).toThrow(
+        `Could not get literal value of Identifier ` +
+          `from Identifier or PropertyAccessExpression: NS.Null`
+      );
+    });
+
+    it('Throws on type: identifier', () => {
+      const { node, program } = parse<ts.TemplateExpression>(() => {
+        const valid = 'valid';
+        const NS = {
+          Str: valid,
+        };
+        return `<div class=${NS.Str} />`;
+      });
+
+      const gen = traverse(node, program);
+      expect(gen.next().value).toBe(`<div class=`);
+
+      expect(gen.next.bind(gen)).toThrow(
+        `Could not get literal value of Identifier ` +
+          `from Identifier or PropertyAccessExpression: NS.Str`
+      );
+    });
+  });
 });

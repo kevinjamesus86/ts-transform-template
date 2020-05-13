@@ -36,7 +36,6 @@ import type { TemplateTransformFn } from './types';
 import { invariant, isArray, isString } from './util';
 
 export type YieldedTypes = string;
-
 export type AcceptableDeclaration = EnumMember | VariableDeclaration;
 
 /**
