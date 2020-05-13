@@ -9,7 +9,8 @@
     "build/"
   ],
   "scripts": {
-    "build": "rimraf build; yarn lint && yarn test && tsc -p . && prettier build --write",
+    "clean": "rimraf build",
+    "build": "yarn clean; yarn lint && yarn test && tsc -p . && prettier build --write",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "yarn lint --fix",
     "test": "jest",
