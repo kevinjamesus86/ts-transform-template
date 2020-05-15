@@ -1,6 +1,6 @@
 {
   "name": "ts-transform-template",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Transform hook for inlined <html/> template expressions. Smoosh all the things.",
   "license": "Unlicense",
   "author": "kevin@modeanalytics.com",
