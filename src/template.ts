@@ -14,10 +14,11 @@ import type {
   TemplateExpression,
   TemplateLiteralToken,
   VariableDeclaration,
+  NodeFactory,
 } from 'typescript';
 
 import {
-  createStringLiteral,
+  factory,
   isBinaryExpression,
   isEnumMember,
   isIdentifier,
@@ -211,12 +212,12 @@ export class Template {
     return null;
   }
 
-  public transform(min: TemplateTransformFn): Template {
+  public transform(fn: TemplateTransformFn): Template {
     if (Template.willEnterAtNode(this.node)) {
       this.result = this.visit();
       if (isString(this.result)) {
         try {
-          this.transformResult = min(this.result);
+          this.transformResult = fn(this.result);
         } catch ({ message }) {
           console.error(`@failed to transform with error: ${message}`);
         }
@@ -226,7 +227,7 @@ export class Template {
     return this;
   }
 
-  public toAst(): StringLiteral | null {
+  public toAst({ createStringLiteral } = factory): StringLiteral | null {
     return isString(this.transformResult)
       ? createStringLiteral(this.transformResult)
       : null;

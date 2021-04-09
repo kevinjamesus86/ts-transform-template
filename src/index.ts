@@ -1,6 +1,4 @@
 import {
-  createIdentifier,
-  createPropertyAssignment,
   isIdentifier,
   isPropertyAssignment,
   visitEachChild,
@@ -50,20 +48,20 @@ function visit(
   transform: TemplateTransformFn,
   program: Program
 ): Visitor {
-  const visitor: Visitor = (node: Node): VisitResult<Node> => {
+  const { factory } = context;
+  return function visitor(node: Node): VisitResult<Node> {
     if (isTemplatePropertyAssignment(node, TEMPLATE_PROPERTY_NAME)) {
       const template = new Template(node.initializer, program);
-      const newNode = template.transform(transform).toAst();
+      const newNode = template.transform(transform).toAst(factory);
       if (newNode) {
-        return createPropertyAssignment(
-          createIdentifier(TEMPLATE_PROPERTY_NAME),
+        return factory.createPropertyAssignment(
+          factory.createIdentifier(TEMPLATE_PROPERTY_NAME),
           newNode
         );
       }
     }
     return visitEachChild(node, visitor, context);
   };
-  return visitor;
 }
 
 /**
