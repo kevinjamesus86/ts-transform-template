@@ -14,13 +14,11 @@ import type {
   TemplateExpression,
   TemplateLiteralToken,
   VariableDeclaration,
-  NodeFactory,
 } from 'typescript';
 
 import {
   factory,
   isBinaryExpression,
-  isEnumMember,
   isIdentifier,
   isNumericLiteral,
   isParenthesizedExpression,
@@ -29,7 +27,6 @@ import {
   isStringLiteralLike,
   isTemplateExpression,
   isTemplateLiteralToken,
-  isVariableDeclaration,
   SyntaxKind,
 } from 'typescript';
 
@@ -156,12 +153,9 @@ export function* traverse(
     const symbol = typeChecker.getSymbolAtLocation(identifier);
     if (symbol) {
       const declaration = symbol.valueDeclaration;
-      if (isEnumMember(declaration) || isVariableDeclaration(declaration)) {
-        const initializer = (symbol.valueDeclaration as AcceptableDeclaration)
-          .initializer;
-        if (initializer && isLiteralLikeNode(initializer)) {
-          return yield getNodeText(initializer);
-        }
+      const initializer = (declaration as AcceptableDeclaration)?.initializer;
+      if (initializer && isLiteralLikeNode(initializer)) {
+        return yield getNodeText(initializer);
       }
     }
 

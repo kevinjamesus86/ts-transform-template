@@ -128,6 +128,21 @@ describe('traverse', () => {
     expect(gen.next().done).toBe(true);
   });
 
+  it('Identifier or AccessExpression with LiteralLike initializers', () => {
+    const { node, program } = parse<ts.TemplateExpression>(() => {
+      const NS = {
+        Str: 'valid',
+      };
+      return `<div class=${NS.Str} />`;
+    });
+
+    const gen = traverse(node, program);
+    expect(gen.next().value).toBe(`<div class=`);
+    expect(gen.next().value).toBe(`valid`);
+    expect(gen.next().value).toBe(` />`);
+    expect(gen.next().done).toBe(true);
+  });
+
   it('THE BIG TEMPLATE', () => {
     const { node, program } = parse<ts.BinaryExpression>(() => {
       const Str = 'nope';
