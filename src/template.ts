@@ -92,7 +92,7 @@ export type TraversableNode =
  * ie. nodes with a `text` property
  */
 export const getNodeText = (node: LiteralLikeNode): string => {
-  return node.text;
+  return node?.text;
 };
 
 /**
@@ -130,7 +130,8 @@ export function* traverse(
   } else if (isBinaryExpression(node)) {
     invariant(
       node.operatorToken.kind === SyntaxKind.PlusToken,
-      `Can only join template parts from BinaryExpressions ` +
+      () =>
+        `Can only join template parts from BinaryExpressions ` +
         `using the "+" operator, saw: ${node.operatorToken.getText()}`
     );
 
@@ -166,13 +167,14 @@ export function* traverse(
 
     invariant(
       false,
-      `Could not get literal value of Identifier ` +
+      () =>
+        `Could not get literal value of Identifier ` +
         `from Identifier or PropertyAccessExpression: ${node.getText()}`
     );
   } else if (isParenthesizedExpression(node)) {
     yield* traverse(node.expression, program);
   } else {
-    invariant(false, `Non-traversable node found: ${node.getText()}`);
+    invariant(false, () => `Non-traversable node found: ${node.getText()}`);
   }
 }
 
@@ -199,7 +201,7 @@ export class Template {
     try {
       entries = Array.from(traverse(this.node, this.program));
     } catch ({ message }) {
-      console.error('@failed to visit with error:', message);
+      // console.error('@failed to visit with error:', message);
     }
 
     if (isArray(entries) && entries.length) {
