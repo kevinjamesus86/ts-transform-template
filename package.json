@@ -14,7 +14,7 @@
     "lint": "eslint src/**/*.ts",
     "lint:fix": "yarn lint --fix",
     "test": "jest",
-    "test:watch": "jest -w",
+    "test:watch": "jest --watch",
     "prepare": "husky install"
   },
   "devDependencies": {
