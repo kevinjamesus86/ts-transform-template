@@ -74,10 +74,14 @@ export function transform(
 ): TransformerFactory<SourceFile> {
   return function transformerFactory(context: TransformationContext) {
     return function transformer(sourceFile: SourceFile): SourceFile {
-      return visitNode(
-        sourceFile,
-        visit(context, templateTransformFn, program)
-      );
+      const source = sourceFile.getFullText();
+      if (source.includes(TEMPLATE_PROPERTY_NAME + ':')) {
+        return visitNode(
+          sourceFile,
+          visit(context, templateTransformFn, program)
+        );
+      }
+      return sourceFile;
     };
   };
 }
